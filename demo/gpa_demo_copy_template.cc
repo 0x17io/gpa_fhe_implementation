@@ -3,6 +3,7 @@ short Calculator::process(char gpa_data[]) {
     float number_of_grades = 0;
 
     // Go through string, only add numbers
+#pragma hls_unroll yes
     for (int i = 0; gpa_data[i] != '\0'; i++) {
         if (gpa_data[i] == ' ') {
             continue;
