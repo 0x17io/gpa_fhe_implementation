@@ -199,16 +199,11 @@ class ClientGUI:
             print("Failed to connect to server.")
 
 
+        # wait for server
+        gpa = client.recv(1024).decode()
 
-        while True:
-            sleep(1)
-            gpa = client.recv(1024).decode()
-
-        # write_thread = threading.Thread(target=cl.write())
-        # write_thread.start()\
         #store gpa for displaying
-
-        self.gpaUpdte = str(gpa)
+        self.gpaUpdte = gpa
         self.show_GPA()
 
 
