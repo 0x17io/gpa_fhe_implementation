@@ -194,13 +194,14 @@ class ClientGUI:
             client.connect(('127.0.0.1', 7878))
             # send data:
             client.send(grades.encode())
-            client.close()
+            
         except:
             print("Failed to connect to server.")
 
 
         # wait for server
         gpa = client.recv(1024).decode()
+        client.close()
 
         #store gpa for displaying
         self.gpaUpdte = gpa
