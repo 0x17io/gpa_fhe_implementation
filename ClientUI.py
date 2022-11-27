@@ -12,7 +12,6 @@ import client as cl
 import socket
 import threading
 # pip install PyCryptodome
-from Crypto.Cipher import DES
 
 
 
@@ -194,15 +193,15 @@ class ClientGUI:
             client.connect(('127.0.0.1', 7878))
             # send data:
             client.send(grades.encode())
-            
+            client.close()
         except:
             print("Failed to connect to server.")
 
-
+        #temp
+        gpa= "0.0"
         # wait for server
-        gpa = client.recv(1024).decode()
-        client.close()
-
+        # gpa = client.recv(1024).decode()
+        # client.close()
         #store gpa for displaying
         self.gpaUpdte = gpa
         self.show_GPA()
