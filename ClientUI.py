@@ -191,18 +191,25 @@ class ClientGUI:
             # Connecting To Server
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect(('127.0.0.1', 7878))
-            # send data:
-            client.send(grades.encode())
+            client.send(grades.encode('utf-8'))
+            print("Sent")
             client.close()
-        except:
-            print("Failed to connect to server.")
 
-        #temp
-        gpa= "0.0"
-        # wait for server
-        # gpa = client.recv(1024).decode()
-        # client.close()
-        #store gpa for displaying
+        except Exception as e:
+            print(e)
+            print("Failed to send message to server.")
+
+        # try:
+        #     gpa = client.recv(1024).decode('utf-8')
+        #     client.close()
+        # except Exception as e:
+        #     print(e)
+        #     print("Failed to recieve message.")
+
+        #Remove when recv works
+        gpa = " -- "
+        ###############
+        
         self.gpaUpdte = gpa
         self.show_GPA()
 
