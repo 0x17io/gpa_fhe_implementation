@@ -1,3 +1,4 @@
+* Make sure to build docker as described in here: https://github.com/google/fully-homomorphic-encryption
 Run the below commands to get started within the docker container:
 
 apt-get install curl -y && apt-get install emacs -y && curl https://sh.rustup.rs -sSf | sh
