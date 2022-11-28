@@ -1,0 +1,62 @@
+use std::env;
+use std::io::BufRead;
+use std::io::BufReader;
+use std::process::{Command, Stdio};
+use std::io::prelude::*;
+use std::io::Result;
+use std::net::TcpListener;
+use std::net::TcpStream;
+
+fn handle_connection(mut stream: TcpStream) {
+    let mut buffer = [0; 512];
+        stream.read(&mut buffer).unwrap();
+	    let incoming_data = String::from_utf8_lossy(&buffer[..]).to_owned();
+	        let incoming_data = incoming_data.trim_matches(char::from(0));
+
+    let mut data_split: Vec<&str> = incoming_data.split(" ").collect();
+        data_split.remove(0);
+	    println!("{:?}", data_split);
+
+    let mut execute_command = Command::new("bazel")
+            .arg("run")
+	            .arg("-c")
+		            .arg("opt")
+			            .arg("gpa_demo:gpa_cleartext_test")
+				            .arg(data_split[0 as usize])
+					            .arg(data_split[1 as usize])
+						            .arg(data_split[2 as usize])
+							            .arg(data_split[3 as usize])
+								            .stdout(Stdio::piped())
+									            .spawn()
+										            .unwrap();
+
+    let encode = execute_command.wait().expect("fail to wait");
+
+
+    //println!("{}", String::from_utf8_lossy(&encode));
+        //let response = format!(encode.to_string());
+
+    //assert!(encode.success());
+        let stdout = execute_command.stdout.take().unwrap();
+	    let lines = BufReader::new(stdout).lines();
+	        for line in lines {
+		        stream.write_all(String::from_utf8_lossy(line.unwrap().as_bytes()).as_bytes()).unwrap();
+			    }
+
+}
+
+pub fn create_listener(addr: String) -> Result<()> {
+    let listener = TcpListener::bind(addr)?;
+        for stream in listener.incoming() {
+	        let stream = stream.unwrap();
+		        handle_connection(stream);
+			    }
+			        Ok(())
+				}
+
+fn main() -> Result<()> {
+    let path = env::current_dir()?;
+        println!("The current directory is {}", path.display());
+
+    create_listener(String::from("0.0.0.0:7878"))
+    }
