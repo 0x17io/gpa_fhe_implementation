@@ -1,4 +1,6 @@
 # gpa_fhe_implementation
+The only way this code will work is if you fully install: https://github.com/google/fully-homomorphic-encryption This does take quite a long time.
+
 When running the docker file, ensure that you initialize your session with the following commands:
 intro
 apt-get install curl -y && apt-get install emacs -y && curl https://sh.rustup.rs -sSf | sh
