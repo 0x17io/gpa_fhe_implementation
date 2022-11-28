@@ -4,8 +4,8 @@ intro
 apt-get install curl -y && apt-get install emacs -y && curl https://sh.rustup.rs -sSf | sh
 source "$HOME/.cargo/env"
 
-* Make FHE
- - bazel run //transpiler/examples/hangman:hangman_client
+Make FHE
+bazel run //transpiler/examples/hangman:hangman_client
 
 
 
