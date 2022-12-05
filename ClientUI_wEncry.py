@@ -20,33 +20,48 @@ class ClientGUI:
         self.window = Tk()
         self.window.title("Client")
         self.window.geometry("640x480")
-        # window.configure(background='grey')
-        self.window.resizable(False,False)
+
+        self.window.resizable(False, False)
+        self.window.configure(background = "black")
+
+        # Add image file
+        bg = PhotoImage(file="UI_background.png")
+
+        # Show image using label
+        wallpaper = Label(self.window, image=bg)
+        wallpaper.place(x=0, y=0)
 
         #Frame
         titleFrame = Frame(self.window, width=30,height=20)
         titleFrame.pack(side=TOP)
 
         # Grades Frame
-        gradeFrame = Frame(self.window, width=30, height=30)
-        gradeFrame.pack(side=LEFT)
+        inGrade = Label(self.window, text="Input Grades: ",font=('Helvetica 11 bold'),background='white', relief=FLAT)
+        inGrade.pack()
+        inGrade.place(x=37,y=32)
+        gradeFrame = Frame(self.window, width=30, height=30, bg = "#2363FF")
+        gradeFrame.pack()
+        gradeFrame.place(x=36, y=53)
 
         # Send Frame
         sendFrame = Frame(self.window, width=30, height=5)
-        sendFrame.pack(anchor=E,side=BOTTOM)
+        sendFrame.pack()
+        sendFrame.place(x=550, y=420)
 
 
-        title = Label(titleFrame, width=10, height=1, text= "Find GPA",font=('Helvetica 18 bold'))
+
+        title = Label(titleFrame, width=13, height=1, text= "Average GPA",font=('Helvetica 18 bold'))
         title.pack()
 
         self.gradeText = Text(gradeFrame,width=20, height=25, font=('Helvetica 10'))
-        self.gradeText.pack(padx=10)
+        self.gradeText.pack()
+        # self.gradeText.place(x=200)
 
         # Creates GPA LABEL Frame
         self.gpaUpdte = " -- "
-        self.gpaFrame = Frame(self.window, width=30, height=5)
+        self.gpaFrame = Frame(self.window, width=30, height=5, background='white')
         self.gpaFrame.pack()
-        self.gpaFrame.place(x=400, y=150)
+        self.gpaFrame.place(x=400, y=158)
         # Creates GPA Label on screen
         self.gpa_lbl()
 
@@ -58,22 +73,26 @@ class ClientGUI:
         # self.sendBtn = Button(sendFrame, width=5, height= 1,text = "Send", font=("Helvetica 16 bold"), command=self.ValData)
         self.sendBtn = Button(sendFrame, width=5, height=1, text="Send", font=("Helvetica 16 bold"),
                               command=self.callVal)
-        self.sendBtn.pack(padx=20, pady=20)
+        # self.sendBtn.pack(padx=20, pady=20)
+        self.sendBtn.pack()
+        # self.sendBtn.place(x=400, y=150)
 
         self.window.mainloop()
 
     def gpa_lbl(self):
         #Places Creates "GPA" Label
-        self.gpaLabel = Label(self.gpaFrame, width=4, height=1, text="GPA: ", font=('Helvetica 12 bold'))
+        self.gpaLabel = Label(self.gpaFrame, width=4, height=1, text="GPA: ", font=('Helvetica 16 bold'), background='white')
         self.gpaLabel.pack(side=LEFT)
 
         # GPA Label
-        self.gpaLabelNum = Label(self.gpaFrame, width=4, height=1,  text=self.gpaUpdte, font=('Helvetica 12'))
+        self.gpaLabelNum = Label(self.gpaFrame, width=4, height=1,  text=self.gpaUpdte, font=('Helvetica 16'), background='white')
         self.gpaLabelNum.pack(side=LEFT)
+        self.gpaFrame.place(x=400, y=158)
 
     def processing(self):
-        self.proclbl = Label(self.gpaFrame, width=15, height=1, text="Processing...", fg='red',font=('Helvetica 12 bold'))
+        self.proclbl = Label(self.gpaFrame, width=15, height=1, text="Processing...", fg='red',font=('Helvetica 12 bold'), background='white')
         self.proclbl.pack(side=LEFT)
+        self.gpaFrame.place(x=370, y=158)
 
     def statusDisp(self):
         # updates to processing status
@@ -185,6 +204,9 @@ class ClientGUI:
 
     def connect(self, grades):
         pwd = "1234"
+        addr = '127.0.0.1'
+        port = 7878
+        gpa = " -- "
         # disable sends and change to processing
         self.statusDisp()
 
@@ -192,11 +214,10 @@ class ClientGUI:
         try:
             # Connecting To Server
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect(('127.0.0.1', 7878))
+            client.connect((addr, port))
             encr = AESCipher(pwd).encrypt(grades).decode('utf-8')
             client.send(encr.encode('utf-8'))
             print("Sent")
-            # client.close()
 
         except Exception as e:
             print(e)
@@ -212,10 +233,7 @@ class ClientGUI:
             print(e)
             print("Failed to recieve message.")
 
-        # Remove when recv works
-        # gpa = " -- "
-        ##############
-
+        print(gpa)
         self.gpaUpdte = gpa
         self.show_GPA()
 
